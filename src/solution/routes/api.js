@@ -1,6 +1,6 @@
 
 const helpers = require('../../helpers/helpers');
-const Model = require('../routes');
+const Model = require('../../../models');
 
 module.exports = [
   {
@@ -11,8 +11,8 @@ module.exports = [
         helpers.getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
           const allQuestionsWithAnswers = helpers.getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
           const promiseArray = [];
-          allQuestionsWithAnswers.map((books) => {
-            promiseArray.push(Model.Novels.upsert(books));
+          allQuestionsWithAnswers.map((questions) => {
+            promiseArray.push(Model.questions.upsert(questions));
           });
           Promise.all(promiseArray).then(() => {
             reply({ message: 'Data Inserted', status_code: 201 });

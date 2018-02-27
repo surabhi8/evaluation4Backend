@@ -10,11 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     option4: DataTypes.STRING,
     answer: DataTypes.STRING,
   }, {
-    classMethods: {
-      associate(models) {
-        // associations can be defined here
-      },
-    },
   });
   return questions;
 };
