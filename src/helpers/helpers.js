@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const Model = require('../../models');
 
 const getAllQuestionsArray = () => {
   const promise1 = rp('https://5gj1qvkc5h.execute-api.us-east-1.amazonaws.com/dev/allQuestions').then(htmlString => htmlString);
@@ -33,8 +34,22 @@ const getAllQuestionsWithAnswers = (allQuestionsArray, allQuestionsArrayAnswers)
   }
   return allQuestionsWithAnswers;
 };
+
+const populateQuestionsWithAnswers = () => {
+  getAllQuestionsArray().then((allQuestionsArray) => {
+    getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
+      const allQuestionsWithAnswers = getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
+      const promiseArray = [];
+      allQuestionsWithAnswers.map((question) => {
+        promiseArray.push(Model.questions.upsert(question));
+      });
+      Promise.all(promiseArray).then(() => ({ message: 'Data Inserted', status_code: 201 }));
+    });
+  });
+};
 module.exports = {
   getAllQuestionsArray,
   getAllQuestionsAnswers,
   getAllQuestionsWithAnswers,
+  populateQuestionsWithAnswers,
 };

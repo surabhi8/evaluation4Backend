@@ -4,24 +4,6 @@ const Model = require('../../../models');
 
 module.exports = [
   {
-    path: '/populateQuestionsWithAnswers',
-    method: 'POST',
-    handler(request, reply) {
-      helpers.getAllQuestionsArray().then((allQuestionsArray) => {
-        helpers.getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
-          const allQuestionsWithAnswers = helpers.getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
-          const promiseArray = [];
-          allQuestionsWithAnswers.map((question) => {
-            promiseArray.push(Model.questions.upsert(question));
-          });
-          Promise.all(promiseArray).then(() => {
-            reply({ message: 'Data Inserted', status_code: 201 });
-          });
-        });
-      });
-    },
-  },
-  {
     path: '/login',
     method: 'POST',
     handler(request, reply) {
@@ -64,12 +46,27 @@ module.exports = [
         questionId,
         markedOption,
       } = request.payload;
-      const userResponse = {};
-      userResponse.userName = userName;
-      userResponse.questionId = questionId;
-      userResponse.markedOption = markedOption;
-      // console.log(markedOption.option1);
-      console.log(userResponse);
+      const userResponse = {
+        userName,
+        questionId,
+        markedOption,
+      };
+      Model.userAnswers.upsert(userResponse).then(() => {
+        reply({
+          message: 'User response recorded', status_code: 201,
+        });
+      }).catch((err) => {
+        console.log(err.message);
+      });
+    },
+  },
+  {
+    path: '/fetchDetails',
+    method: 'POST',
+    handler(request, reply) {
+      const {
+        userName,
+      } = request.payload;
       Model.userAnswers.upsert(userResponse).then(() => {
         reply({
           message: 'User response recorded', status_code: 201,
