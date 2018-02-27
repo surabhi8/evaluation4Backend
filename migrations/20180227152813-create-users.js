@@ -13,6 +13,7 @@ module.exports = {
       unique: true,
     },
     score: {
+      defaultValue: -1,
       type: Sequelize.INTEGER,
     },
     createdAt: {

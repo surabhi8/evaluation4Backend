@@ -37,7 +37,7 @@ module.exports = [
         if (user === null) {
           Model.users.create({
             userName,
-            score: 0,
+            score: -1,
           }).then(() => {
             reply({
               status_code: 201,
