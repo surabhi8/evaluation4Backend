@@ -62,9 +62,21 @@ module.exports = [
       const {
         userName,
         questionId,
-        Answer,
-
+        markedOption,
       } = request.payload;
+      const userResponse = {};
+      userResponse.userName = userName;
+      userResponse.questionId = questionId;
+      userResponse.markedOption = markedOption;
+      // console.log(markedOption.option1);
+      console.log(userResponse);
+      Model.userAnswers.upsert(userResponse).then(() => {
+        reply({
+          message: 'User response recorded', status_code: 201,
+        });
+      }).catch((err) => {
+        console.log(err.message);
+      });
     },
   },
 ];

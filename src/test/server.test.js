@@ -32,7 +32,21 @@ describe('Testing the Hapi server login API', () => {
     const options = {
       method: 'POST',
       url: '/login',
-      payload: { userName: 'Sur' },
+      payload: { userName: 'Kite' },
+    };
+    server.inject(options, (response) => {
+      expect(response.result.status_code).toBe(201);
+      done();
+    });
+  });
+});
+
+describe('Testing the Hapi server login API', () => {
+  test('Should return 201 status code for successfuly recording user response', (done) => {
+    const options = {
+      method: 'POST',
+      url: '/recordUserResponse',
+      payload: { userName: 'Surabhi', questionId: '12', markedOption: 'New Delhi' },
     };
     server.inject(options, (response) => {
       expect(response.result.status_code).toBe(201);
