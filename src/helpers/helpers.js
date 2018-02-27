@@ -15,7 +15,24 @@ const getAllQuestionsAnswers = (allQuestionsArray) => {
   }
   return Promise.all(promiseArray);
 };
+const getAllQuestionsWithAnswers = (allQuestionsArray, allQuestionsArrayAnswers) => {
+  const allQuestionsWithAnswers = [];
+
+  for (let i = 0; i < allQuestionsArray.length; i += 1) {
+    allQuestionsWithAnswers.push({
+      question: allQuestionsArray[i].question,
+      questionId: allQuestionsArray[i].questionId,
+      option1: allQuestionsArray[i].option1,
+      option2: allQuestionsArray[i].option2,
+      option3: allQuestionsArray[i].option3,
+      option4: allQuestionsArray[i].option4,
+      correctAnswer: JSON.parse(allQuestionsArrayAnswers[i]).answer,
+    });
+  }
+  return allQuestionsWithAnswers;
+};
 module.exports = {
   getAllQuestionsArray,
   getAllQuestionsAnswers,
+  getAllQuestionsWithAnswers,
 };
