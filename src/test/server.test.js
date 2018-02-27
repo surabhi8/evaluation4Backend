@@ -32,10 +32,10 @@ describe('Testing the Hapi server login API', () => {
     const options = {
       method: 'POST',
       url: '/login',
-      payload: { userName: 'Surabhi' },
+      payload: { userName: 'Sur' },
     };
     server.inject(options, (response) => {
-      expect(response.result.status_code).toBe(200);
+      expect(response.result.status_code).toBe(201);
       done();
     });
   });
