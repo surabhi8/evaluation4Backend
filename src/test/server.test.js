@@ -12,3 +12,18 @@ describe('Testing the Hapi server that populate the database', () => {
     });
   });
 });
+
+describe('Testing the Hapi server login API', () => {
+  test('Should return 200 status code for successfuly login request', (done) => {
+    const options = {
+      method: 'POST',
+      url: '/login',
+      payload: { userName: 'Surabhi' },
+    };
+    server.inject(options, (response) => {
+      expect(response.result.status_code).toBe(200);
+      done();
+    });
+  });
+});
+

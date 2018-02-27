@@ -40,14 +40,14 @@ module.exports = [
             score: 0,
           }).then(() => {
             reply({
-              statusCode: 200,
-              message: 'User successfully created',
+              status_code: 201,
+              message: 'New User successfully created and logged in',
             });
           });
         } else {
           reply({
-            statusCode: 200,
-            message: 'User already a user',
+            status_code: 200,
+            message: 'user logged in',
           });
         }
       }).catch((err) => {
