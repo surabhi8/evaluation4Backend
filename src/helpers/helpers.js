@@ -26,7 +26,7 @@ const getAllQuestionsWithAnswers = (allQuestionsArray, allQuestionsArrayAnswers)
       option2: allQuestionsArray[i].option2,
       option3: allQuestionsArray[i].option3,
       option4: allQuestionsArray[i].option4,
-      correctAnswer: JSON.parse(allQuestionsArrayAnswers[i]).answer,
+      answer: JSON.parse(allQuestionsArrayAnswers[i]).answer,
     });
   }
   return allQuestionsWithAnswers;
