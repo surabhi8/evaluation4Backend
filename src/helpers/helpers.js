@@ -36,16 +36,18 @@ const getAllQuestionsWithAnswers = (allQuestionsArray, allQuestionsArrayAnswers)
 };
 
 const populateQuestionsWithAnswers = () => {
-  getAllQuestionsArray().then((allQuestionsArray) => {
-    getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
+  const outerPromise = getAllQuestionsArray().then((allQuestionsArray) => {
+    const innerPromise = getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
       const allQuestionsWithAnswers = getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
       const promiseArray = [];
       allQuestionsWithAnswers.map((question) => {
         promiseArray.push(Model.questions.upsert(question));
       });
-      Promise.all(promiseArray).then(() => ({ message: 'Data Inserted', status_code: 201 }));
+      return Promise.all(promiseArray);
     });
+    return innerPromise;
   });
+  return outerPromise;
 };
 module.exports = {
   getAllQuestionsArray,
@@ -53,3 +55,4 @@ module.exports = {
   getAllQuestionsWithAnswers,
   populateQuestionsWithAnswers,
 };
+

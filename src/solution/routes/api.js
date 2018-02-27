@@ -67,12 +67,28 @@ module.exports = [
       const {
         userName,
       } = request.payload;
-      Model.userAnswers.upsert(userResponse).then(() => {
-        reply({
-          message: 'User response recorded', status_code: 201,
-        });
-      }).catch((err) => {
-        console.log(err.message);
+      const allQuestions = [];
+      Model.questions.findAll().then((user) => {
+        let promise;
+        if (user.length === 0) {
+          promise = helpers.populateQuestionsWithAnswers();
+        }
+        if (typeof promise !== 'undefined') {
+          promise.then(() => {
+            Model.questions.findAll().then((users) => {
+              users.map((user1) => {
+                allQuestions.push({
+                  question: user1.dataValues.question,
+                  questionId: user1.dataValues.questionId,
+                  options: user1.dataValues.options,
+                });
+                return allQuestions;
+              });
+            });
+          });
+        }
+      }).then(() => {
+        reply({ message: allQuestions, status_code: 201 });
       });
     },
   },
