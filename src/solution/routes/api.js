@@ -8,8 +8,7 @@ module.exports = [
     handler(request, reply) {
       helpers.getAllQuestionsArray().then((allQuestionsArray) => {
         helpers.getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
-          const allQuestionsWithAnswers = helpers.getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
-          reply({ message: allQuestionsWithAnswers, status_code: 201 });
+          reply({ message: allQuestionsArrayAnswers, status_code: 201 });
         });
       });
     },
