@@ -11,8 +11,8 @@ module.exports = [
         helpers.getAllQuestionsAnswers(allQuestionsArray).then((allQuestionsArrayAnswers) => {
           const allQuestionsWithAnswers = helpers.getAllQuestionsWithAnswers(allQuestionsArray, allQuestionsArrayAnswers);
           const promiseArray = [];
-          allQuestionsWithAnswers.map((questions) => {
-            promiseArray.push(Model.questions.upsert(questions));
+          allQuestionsWithAnswers.map((question) => {
+            promiseArray.push(Model.questions.upsert(question));
           });
           Promise.all(promiseArray).then(() => {
             reply({ message: 'Data Inserted', status_code: 201 });
@@ -53,6 +53,18 @@ module.exports = [
       }).catch((err) => {
         reply(err);
       });
+    },
+  },
+  {
+    path: '/recordUserResponse',
+    method: 'POST',
+    handler(request, reply) {
+      const {
+        userName,
+        questionId,
+        Answer,
+
+      } = request.payload;
     },
   },
 ];

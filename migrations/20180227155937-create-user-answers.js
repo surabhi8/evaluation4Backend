@@ -1,23 +1,22 @@
 
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('questions', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('userAnswers', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
-    question: {
+    userName: {
       type: Sequelize.STRING,
+      references: { model: 'users', key: 'userName' },
+      unique: true,
     },
     questionId: {
       type: Sequelize.STRING,
     },
-    options: {
-      type: Sequelize.JSON,
-    },
-    answer: {
+    markedOption: {
       type: Sequelize.STRING,
     },
     createdAt: {
@@ -29,5 +28,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('questions'),
+  down: queryInterface => queryInterface.dropTable('userAnswers'),
 };

@@ -17,15 +17,17 @@ const getAllQuestionsAnswers = (allQuestionsArray) => {
 };
 const getAllQuestionsWithAnswers = (allQuestionsArray, allQuestionsArrayAnswers) => {
   const allQuestionsWithAnswers = [];
-
   for (let i = 0; i < allQuestionsArray.length; i += 1) {
+    const options = {};
+    Object.keys(allQuestionsArray[i]).map((key, index) => {
+      if (key !== 'question' && key !== 'questionId') {
+        options[key] = Object.values(allQuestionsArray[i])[index];
+      }
+    });
     allQuestionsWithAnswers.push({
       question: allQuestionsArray[i].question,
       questionId: allQuestionsArray[i].questionId,
-      option1: allQuestionsArray[i].option1,
-      option2: allQuestionsArray[i].option2,
-      option3: allQuestionsArray[i].option3,
-      option4: allQuestionsArray[i].option4,
+      options,
       answer: JSON.parse(allQuestionsArrayAnswers[i]).answer,
     });
   }
