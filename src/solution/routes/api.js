@@ -21,4 +21,38 @@ module.exports = [
       });
     },
   },
+  {
+    path: '/login',
+    method: 'POST',
+    handler(request, reply) {
+      const {
+        userName,
+      } = request.payload;
+
+      Model.users.findOne({
+        where: {
+          userName,
+        },
+      }).then((user) => {
+        if (user === null) {
+          Model.users.create({
+            userName,
+            score: 0,
+          }).then(() => {
+            reply({
+              statusCode: 200,
+              message: 'User successfully created',
+            });
+          });
+        } else {
+          reply({
+            statusCode: 200,
+            message: 'User already a user',
+          });
+        }
+      }).catch((err) => {
+        reply(err);
+      });
+    },
+  },
 ];
