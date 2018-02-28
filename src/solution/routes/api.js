@@ -47,15 +47,25 @@ module.exports = [
         questionId,
         markedOption,
       };
-      Model.userAnswers.findAll({ where: { userName, questionId } })
+      console.log(userResponse);
+      Model.userAnswers.findAll({
+        where: {
+          questionId,
+          userName,
+        },
+      })
         .then((user) => {
           if (user.length === 0) {
-            Model.userAnswers.create({ userResponse }).then(() => {
+            Model.userAnswers.create({
+              userName,
+              questionId,
+              markedOption,
+            }).then(() => {
               reply({ message: 'User response recorded', status_code: 201 });
             });
           } else {
             Model.userAnswers.update({ markedOption }, { where: { userName, questionId } }).then(() => {
-              reply({ message: 'User response updasted', status_code: 201 });
+              reply({ message: 'User response updated', status_code: 201 });
             });
           }
         });

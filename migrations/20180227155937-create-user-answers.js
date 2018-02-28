@@ -10,7 +10,6 @@ module.exports = {
     },
     userName: {
       type: Sequelize.STRING,
-      unique: true,
     },
     questionId: {
       type: Sequelize.STRING,
