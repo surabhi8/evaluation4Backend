@@ -110,7 +110,9 @@ module.exports = [
         }
         return score;
       }).then((totalScore) => {
-        reply({ message: totalScore, status_code: 200 });
+        Model.users.update({ score: totalScore }, { where: { userName } }).then(() => {
+          reply({ message: totalScore, status_code: 200 });
+        });
       });
     },
   },
