@@ -7,10 +7,8 @@ module.exports = [
     path: '/login',
     method: 'POST',
     handler(request, reply) {
-      const {
-        userName,
-      } = request.payload;
-
+      const userName = JSON.parse(request.payload).userName;
+      console.log(userName);
       Model.users.findOne({
         where: {
           userName,
@@ -63,33 +61,22 @@ module.exports = [
   {
     path: '/fetchDetails',
     method: 'POST',
-    handler(request, reply) {
-      const {
-        userName,
-      } = request.payload;
-      const allQuestions = [];
-      Model.questions.findAll().then((user) => {
-        let promise;
-        if (user.length === 0) {
-          promise = helpers.populateQuestionsWithAnswers();
-        }
-        if (typeof promise !== 'undefined') {
-          promise.then(() => {
-            Model.questions.findAll().then((users) => {
-              users.map((user1) => {
-                allQuestions.push({
-                  question: user1.dataValues.question,
-                  questionId: user1.dataValues.questionId,
-                  options: user1.dataValues.options,
-                });
-                return allQuestions;
-              });
+    handler: (request, reply)=> {
+      const allQuestions= [];
+      helpers.isDbEmpty().then((flag)=>{
+        console.log(flag);
+        if(flag===true){
+          helpers.populateQuestionsWithAnswers().then(()=>{
+            helpers.getQuestions().then((allQuestions)=>{
+              reply({message:allQuestions,status_code:200})
             });
-          });
+          })
+        } else {
+          helpers.getQuestions().then((allQuestions)=>{
+            reply({message:allQuestions,status_code:200})
+          })
         }
-      }).then(() => {
-        reply({ message: allQuestions, status_code: 201 });
-      });
-    },
+      })
   },
+}
 ];

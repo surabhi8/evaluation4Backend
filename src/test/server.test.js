@@ -54,3 +54,17 @@ describe('Testing the Hapi server login API', () => {
     });
   });
 });
+
+
+describe('Testing the Hapi server getting the questions data', () => {
+  test('Should return 201 status code for successfuly getting questions data', (done) => {
+    const options = {
+      method: 'POST',
+      url: '/fetchDetails',
+    };
+    server.inject(options, (response) => {
+      expect(response.result.status_code).toBe(200);
+      done();
+    });
+  });
+});
