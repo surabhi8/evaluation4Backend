@@ -69,3 +69,16 @@ describe('Testing the Hapi server getting the questions data', () => {
   });
 });
 
+describe('Testing the Hapi server getting the score', () => {
+  test('Should return 201 status code for successfuly getting the correct data from db', (done) => {
+    const options = {
+      method: 'GET',
+      url: '/score',
+    };
+    server.inject(options, (response) => {
+      expect(response.result.status_code).toBe(200);
+      done();
+    });
+  });
+});
+

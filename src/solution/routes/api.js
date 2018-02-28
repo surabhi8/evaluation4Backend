@@ -42,12 +42,6 @@ module.exports = [
       const userName = JSON.parse(request.payload).username;
       const questionId = JSON.parse(request.payload).questionid;
       const markedOption = JSON.parse(request.payload).markedoption;
-      const userResponse = {
-        userName,
-        questionId,
-        markedOption,
-      };
-      console.log(userResponse);
       Model.userAnswers.findAll({
         where: {
           questionId,
@@ -76,7 +70,6 @@ module.exports = [
     method: 'GET',
     handler: (request, reply) => {
       helpers.isDbEmpty().then((flag) => {
-        console.log(flag);
         if (flag === true) {
           helpers.populateQuestionsWithAnswers().then(() => {
             helpers.getQuestions().then((allQuestionsAfterFirstLogin) => {
@@ -88,6 +81,24 @@ module.exports = [
             reply({ message: allQuestionsFromDB, status_code: 200 });
           });
         }
+      });
+    },
+  },
+  {
+    path: '/score',
+    method: 'POST',
+    handler: (request, reply) => {
+      const {
+        userName,
+      } = request.payload;
+      const questionIdAndAnswers = Model.questions.findAll({ attributes: ['questionId', 'answer'], order: [['questionId', 'DESC']] });
+      const answerByUsername = Model.userAnswers
+        .findAll({ attributes: ['questionId', 'markedOption'] }, { where: { userName }, order: [['questionId', 'DESC']] });
+      Promise.all([questionIdAndAnswers, answerByUsername]).then(([correctAnswers, userAnswers]) => {
+        console.log('Hello', correctAnswers);
+        console.log('Hello', userAnswers);
+      }).then(() => {
+        reply({ message: 'Seeing the data', status_code: 200 });
       });
     },
   },
