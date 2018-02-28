@@ -49,31 +49,31 @@ const populateQuestionsWithAnswers = () => {
   });
   return outerPromise;
 };
-const isDbEmpty=()=>{
-  const promise = Model.questions.findAll().then((user)=>{
-    if(user.length===0){
-        return true;
-    } else return false;
+const isDbEmpty = () => {
+  const promise = Model.questions.findAll().then((user) => {
+    if (user.length === 0) {
+      return true;
+    } return false;
   });
   return promise;
-}
+};
 
-const getQuestions=()=>{
+const getQuestions = () => {
   const allQuestions = [];
   const promise =
    Model.questions.findAll().then((users) => {
-              users.map((user1) => {
-                allQuestions.push({
-                  question: user1.dataValues.question,
-                  questionId: user1.dataValues.questionId,
-                  options: user1.dataValues.options,
-                });
-                return allQuestions;
-              });
-              return allQuestions;
-    });
-           return promise; 
-}
+     users.map((user1) => {
+       allQuestions.push({
+         question: user1.dataValues.question,
+         questionId: user1.dataValues.questionId,
+         options: user1.dataValues.options,
+       });
+       return allQuestions;
+     });
+     return allQuestions;
+   });
+  return promise;
+};
 
 module.exports = {
   getAllQuestionsArray,
