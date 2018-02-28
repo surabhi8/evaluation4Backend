@@ -91,14 +91,26 @@ module.exports = [
       const {
         userName,
       } = request.payload;
+      let score = 0;
       const questionIdAndAnswers = Model.questions.findAll({ attributes: ['questionId', 'answer'], order: [['questionId', 'DESC']] });
       const answerByUsername = Model.userAnswers
         .findAll({ attributes: ['questionId', 'markedOption'] }, { where: { userName }, order: [['questionId', 'DESC']] });
       Promise.all([questionIdAndAnswers, answerByUsername]).then(([correctAnswers, userAnswers]) => {
-        console.log('Hello', correctAnswers);
-        console.log('Hello', userAnswers);
-      }).then(() => {
-        reply({ message: 'Seeing the data', status_code: 200 });
+        if (correctAnswers.length !== userAnswers.length) {
+          reply({ message: 'Attempt all questions first', status_code: 400 });
+        }
+        for (let i = 0; i < correctAnswers.length; i += 1) {
+          for (let j = 0; j < userAnswers.length; j += 1) {
+            if (correctAnswers[i].dataValues.questionId === userAnswers[j].dataValues.questionId &&
+              userAnswers[j].dataValues.markedOption === correctAnswers[i].dataValues.answer) {
+              score += 1;
+              break;
+            }
+          }
+        }
+        return score;
+      }).then((totalScore) => {
+        reply({ message: totalScore, status_code: 200 });
       });
     },
   },
