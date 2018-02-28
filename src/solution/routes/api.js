@@ -94,8 +94,9 @@ module.exports = [
       let score = 0;
       const questionIdAndAnswers = Model.questions.findAll({ attributes: ['questionId', 'answer'], order: [['questionId', 'DESC']] });
       const answerByUsername = Model.userAnswers
-        .findAll({ attributes: ['questionId', 'markedOption'] }, { where: { userName }, order: [['questionId', 'DESC']] });
+        .findAll({ attributes: ['questionId', 'markedOption'], where: { userName }, order: [['questionId', 'DESC']] });
       Promise.all([questionIdAndAnswers, answerByUsername]).then(([correctAnswers, userAnswers]) => {
+        console.log(correctAnswers.length, userAnswers.length);
         if (correctAnswers.length !== userAnswers.length) {
           reply({ message: 'Attempt all questions first', status_code: 400 });
         }
@@ -108,11 +109,25 @@ module.exports = [
             }
           }
         }
-        return score;
-      }).then((totalScore) => {
-        Model.users.update({ score: totalScore }, { where: { userName } }).then(() => {
-          reply({ message: totalScore, status_code: 200 });
+        const numberOfQuestions = correctAnswers.length;
+        const data = [];
+        data.push(numberOfQuestions);
+        data.push(score);
+        return data;
+      }).then((data) => {
+        Model.users.update({ score: data[1] }, { where: { userName } }).then(() => {
+          reply({ message: data, status_code: 200 });
         });
+      });
+    },
+  },
+  {
+    path: '/leaderboard',
+    method: 'GET',
+    handler: (request, reply) => {
+      Model.users.findAll({ attributes: ['userName', 'score'], order: [['score', 'DESC']], limit: 5 }).then((topPeople) => {
+        const people = [];
+        console.log(topPeople);
       });
     },
   },
