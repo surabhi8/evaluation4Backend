@@ -88,9 +88,8 @@ module.exports = [
     path: '/score',
     method: 'POST',
     handler: (request, reply) => {
-      const {
-        userName,
-      } = request.payload;
+      const userName = JSON.parse(request.payload).userName;
+      console.log(userName);
       let score = 0;
       const questionIdAndAnswers = Model.questions.findAll({ attributes: ['questionId', 'answer'], order: [['questionId', 'DESC']] });
       const answerByUsername = Model.userAnswers
@@ -109,14 +108,10 @@ module.exports = [
             }
           }
         }
-        const numberOfQuestions = correctAnswers.length;
-        const data = [];
-        data.push(numberOfQuestions);
-        data.push(score);
-        return data;
-      }).then((data) => {
-        Model.users.update({ score: data[1] }, { where: { userName } }).then(() => {
-          reply({ message: data, status_code: 200 });
+        return score;
+      }).then((totalScore) => {
+        Model.users.update({ score: totalScore }, { where: { userName } }).then(() => {
+          reply({ message: totalScore, status_code: 200 });
         });
       });
     },
@@ -127,7 +122,14 @@ module.exports = [
     handler: (request, reply) => {
       Model.users.findAll({ attributes: ['userName', 'score'], order: [['score', 'DESC']], limit: 5 }).then((topPeople) => {
         const people = [];
-        console.log(topPeople);
+        for (let i = 0; i < topPeople.length; i += 1) {
+          people.push({
+            userName: topPeople[i].dataValues.userName,
+            score: topPeople[i].dataValues.score,
+          });
+        }
+        console.log(people);
+        reply({ message: people, status_code: 200 });
       });
     },
   },
